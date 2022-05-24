@@ -1,0 +1,146 @@
+<div class="container">
+  <div class="configuration">
+
+    <mat-accordion multi>
+
+      <mat-expansion-panel>
+
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            Задать конфигурацию
+          </mat-panel-title>
+          <mat-panel-description>
+            Задать цель и препятствия
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+
+        <mat-accordion>
+
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                Задать взывоопасный объект
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+
+            <div class="inside-coordinates">
+              <mat-form-field>
+                <mat-label>Latitude</mat-label>
+                <input (input)="updateLat()" id="lat" matInput [disabled]="isSelecting" [value]="lat"/>
+              </mat-form-field>
+              <mat-form-field>
+                <mat-label>Longitude</mat-label>
+                <input (input)="updateLon()" id="lon" matInput [disabled]="isSelecting" [value]="lon"/>
+              </mat-form-field>
+              <mat-form-field>
+                <mat-label>Zoom</mat-label>
+                <input (input)="updateZoom()" id="zoom" matInput [disabled]="isSelecting" [value]="zoom"/>
+              </mat-form-field>
+
+              <div class="row-container">
+                <button (click)="readyButtonClicked()" mat-button color="primary" [disabled]="isSelecting">Готово
+                </button>
+                <button id="selectOnMap" (click)="selectTarget()" mat-button [color]="selectButtonColor">Выбрать на
+                  карте
+                </button>
+              </div>
+            </div>
+
+          </mat-expansion-panel>
+
+          <button (click)="startDrawing()" mat-button color="primary">Задать препятствие</button>
+        </mat-accordion>
+
+      </mat-expansion-panel>
+
+      <mat-expansion-panel>
+
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            Конфигурация
+          </mat-panel-title>
+          <mat-panel-description>
+            Текущие заданные препятствия
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+
+        <mat-list>
+          <mat-list-item *ngFor="let item of objects; trackBy: redraw">
+            <mat-checkbox style="margin-right: 10px" (click)="show(item)" [value]="item.isShowing"></mat-checkbox>
+            <mat-label style="margin-right: 20px">{{item.type}}</mat-label>
+            <button (click)="deleteObject(item)" mat-icon-button color="warn">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </mat-list-item>
+        </mat-list>
+
+      </mat-expansion-panel>
+
+      <mat-expansion-panel>
+
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            Конфигурация вычислений
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+
+        <mat-tab-group>
+          <mat-tab label="По массе">
+            <div class="inside-coordinates">
+              <mat-form-field>
+                <mat-label>Mp</mat-label>
+                <input id="mass" type="number" matInput/>
+              </mat-form-field>
+
+              <button (click)="sendRequest('mass')" mat-button color="primary">Начать рассчёт</button>
+            </div>
+          </mat-tab>
+          <mat-tab label="ВСУГ">
+            <div class="inside-coordinates">
+              <mat-form-field>
+                <mat-label>Объём</mat-label>
+                <input id="volumeH" type="number" matInput/>
+              </mat-form-field>
+
+              <button (click)="sendRequest('volumeH')" mat-button color="primary">Начать рассчёт</button>
+            </div>
+          </mat-tab>
+          <mat-tab label="НСУГ">
+            <div class="inside-coordinates">
+              <mat-form-field>
+                <mat-label>Объём</mat-label>
+                <input id="volumeL" type="number" matInput/>
+              </mat-form-field>
+
+              <button (click)="sendRequest('volumeL')" mat-button color="primary">Начать рассчёт</button>
+            </div>
+          </mat-tab>
+        </mat-tab-group>
+
+      </mat-expansion-panel>
+
+      <mat-expansion-panel>
+
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            Результаты вычисления
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+
+        <mat-list>
+          <mat-list-item *ngFor="let item of result; trackBy: redrawResult">
+            <mat-checkbox style="margin-right: 10px" (click)="show(item)" [value]="item.isShowing"></mat-checkbox>
+            <mat-label style="margin-right: 20px">{{item.description}}</mat-label>
+          </mat-list-item>
+        </mat-list>
+
+      </mat-expansion-panel>
+      <!--      </mat-accordion>-->
+
+    </mat-accordion>
+  </div>
+  <div class="main-map-container">
+    <iframe id="mapContainer" [src]="mapSrc | safe">
+    </iframe>
+  </div>
+</div>
